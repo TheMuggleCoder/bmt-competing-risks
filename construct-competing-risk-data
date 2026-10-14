@@ -1,3 +1,18 @@
+2. Construct competing-risk data ---------------------
+
+# KMsurv documentation defines:
+# t2 = time to relapse, death, or end of study
+# d2 = relapse indicator
+# d3 = indicator of death OR relapse
+#
+# Derivation for first event:
+#   status = 1: relapse (d2 = 1)
+#   status = 2: death before relapse (d3 = 1 and d2 = 0)
+#   status = 0: censored/event-free at last follow-up (d3 = 0)
+#
+# This uses the first disease-free-survival event time t2. We validate the
+# event indicators and stop rather than silently re coding unexpected patterns.
+
 bmt <- bmt_raw |>
   mutate(
     disease_group = factor(
@@ -5,6 +20,7 @@ bmt <- bmt_raw |>
       levels = c(1, 2, 3),
       labels = c("ALL", "AML low risk", "AML high risk")
     ),
+    # Use explicit labels to make event coding clear throughout the analysis.
     event_status = case_when(
       d2 == 1 ~ 1L,
       d3 == 1 & d2 == 0 ~ 2L,
@@ -35,6 +51,8 @@ if (any(!bmt$d2 %in% c(0, 1)) || any(!bmt$d3 %in% c(0, 1))) {
 if (any(bmt$d2 == 1 & bmt$d3 != 1)) {
   stop("Data consistency check failed: relapse should count as a DFS event.")
 }
+
+# Cross-check event indicator derivation against documented d3 definition.
 if (any((bmt$event_status != 0) != (bmt$d3 == 1))) {
   stop("Derived event status does not agree with d3.")
 }
@@ -42,7 +60,6 @@ if (any((bmt$event_status != 0) != (bmt$d3 == 1))) {
 event_coding_check <- bmt |>
   count(d2, d3, event_type, name = "n") |>
   arrange(d2, d3)
-
 write_csv_safe(event_coding_check,
                file.path(output_dir, "tables", "event_coding_check.csv"))
 
