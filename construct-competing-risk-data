@@ -1,0 +1,32 @@
+# Create competing risk data
+bmt <- bmt_raw |>
+  mutate(
+    disease_group = factor(group, levels = c(1, 2, 3),
+                           labels = c("ALL", "AML low risk", "AML high risk")),
+    event_status = ifelse(d2 == 1, 1,
+                          ifelse(d3 == 1 & d2 == 0, 2, 0)),
+    event_type = factor(event_status, levels = c(0, 1, 2),
+                        labels = c("Censored", "Relapse", "Death before relapse")),
+    patient_sex = factor(z3, levels = c(0, 1), labels = c("Female", "Male")),
+    patient_cmv = factor(z5, levels = c(0, 1), labels = c("Negative", "Positive")),
+    donor_cmv = factor(z6, levels = c(0, 1), labels = c("Negative", "Positive")),
+    mtx = factor(z10, levels = c(0, 1), labels = c("No", "Yes")),
+    time = as.numeric(t2)
+  )
+
+# Check the event coding
+if (anyNA(bmt$event_status)) {
+  stop("Missing event status")
+}
+
+analysis_data <- bmt |>
+  select(
+    patient_id, disease_group, time, event_status, event_type,
+    patient_age = z1, donor_age = z2, patient_sex,
+    patient_cmv, donor_cmv, waiting_time = z7, mtx,
+    d1, d2, d3, t1, t2
+  ) |>
+  drop_na(disease_group, time, event_status, patient_age, patient_sex)
+
+write_csv_safe(analysis_data, file.path(output_dir, "tables", "analysis_data.csv"))
+
