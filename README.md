@@ -1,61 +1,59 @@
-# Bone Marrow Transplant (BMT) Dataset
+# Competing Risks Analysis of Relapse after Bone Marrow Transplantation
 
-## Overview
+Analysis of relapse, with death before relapse as a competing event, in 137 patients
+with acute leukaemia who received a bone marrow transplant (`bmt` dataset, R package KMsurv).
 
-The `bmt` dataset contains clinical information about patients who underwent bone marrow transplantation. It is distributed with the **KMsurv** R package and is commonly used to study survival data and time-to-event outcomes.
+A plain-language explanation of every method is in **`GUIDE.html`** (open it in any browser).
 
-- **Number of observations:** 137
-- **Number of variables:** 22
-- **Dataset name:** `bmt`
-- **Source:** KMsurv R package
+## How to run (in this order)
 
-## What Does the Dataset Contain?
+1. Install **R** (https://cran.r-project.org) and **RStudio** (https://posit.co/download/rstudio-desktop/).
+2. Unzip this folder and double-click **`BMT_Project.Rproj`**. RStudio opens in the project folder.
+3. Open **`run_all.R`** and click **Source** (top-right of the script window).
+   - First run only: missing packages are installed automatically (needs internet, a few minutes).
+   - Results print in the Console, plots appear in the Plots pane, and everything is saved in `output/`.
+   - Total run time is about two minutes, most of it the simulation.
+4. Open **`app.R`** and click **Run App** to start the interactive Shiny app.
+   The app works on its own; you do not need to run step 3 first.
 
-The dataset includes information about patient and donor characteristics, disease groups, transplant-related factors, follow-up times, and clinical events.
+## Project structure
 
-Key information includes:
+| File | Content |
+|---|---|
+| `BMT_Project.Rproj` | RStudio project file (sets the working folder) |
+| `01_preprocessing.R` | Packages, data loading, readable variable names, competing-risks outcome |
+| `02_eda.R` | Exploratory analysis: summary table and six plots |
+| `03_kaplan_meier.R` | Kaplan-Meier overall survival by disease group, log-rank test |
+| `04_cumulative_incidence.R` | Aalen-Johansen cumulative incidence, Gray's test, comparison with 1 - KM |
+| `05_cox_model.R` | Cause-specific Cox model for relapse, proportional hazards test |
+| `06_fine_gray_model.R` | Fine-Gray model for relapse |
+| `07_model_comparison.R` | Cox vs Fine-Gray table and forest plot |
+| `08_simulation.R` | Simulation study: Aalen-Johansen vs 1 - Kaplan-Meier |
+| `run_all.R` | Runs scripts 01 to 08 in order |
+| `app.R` | Interactive Shiny app (6 tabs) |
+| `GUIDE.html` | Explanation of all concepts and how to read the results |
 
-- **Patient characteristics:** Age and sex of patients.
-- **Donor characteristics:** Age and sex of donors.
-- **Disease information:** Disease groups and selected disease-related indicators.
-- **Transplant-related factors:** Hospital and treatment-related variables.
-- **CMV status:** Cytomegalovirus status of patients and donors.
-- **Overall survival:** Follow-up time and death indicators.
-- **Disease-free survival:** Follow-up time and indicators related to relapse and disease-free survival.
-- **Other clinical events:** Platelet recovery and graft-versus-host disease (GVHD).
+Each script can also be run on its own; it loads the data automatically if needed.
 
-Time variables are generally recorded in days. Event-indicator variables identify whether a particular event was observed. Some observations may be **censored**, meaning that the event of interest was not observed during the available follow-up period.
+## Troubleshooting
 
-## What Can This Dataset Be Used For?
+- `cannot open file '01_preprocessing.R'`: RStudio is not in the project folder. Open the project
+  with `BMT_Project.Rproj`, or use *Session > Set Working Directory > To Source File Location*.
+- `there is no package called ...`: run `install.packages("<name>")` in the Console.
+- Plots look squashed: make the Plots pane larger, or open the saved PNG in `output/figures/`.
 
-The dataset can be used to investigate questions such as:
+## References
 
-- How do patient ages vary across disease groups?
-- What are the characteristics of patients and donors?
-- How do overall survival patterns differ between disease groups?
-- How does disease-free survival vary across groups?
-- What can the recorded times reveal about relapse, platelet recovery, and GVHD?
-
-These are potential research questions rather than conclusions established by the dataset itself.
-
-## Dataset Source
-
-The dataset is included in the **KMsurv** R package.
-
-- **R package:** KMsurv
-- **Dataset:** `bmt`
-- **CRAN:** https://cran.r-project.org/package=KMsurv
-
-The dataset can be loaded in R using:
-
-```r
-install.packages("KMsurv")
-library(KMsurv)
-data("bmt", package = "KMsurv")
-```
-
-## Important Considerations
-
-- The dataset represents a specific clinical context and may not be representative of all bone marrow transplant patients.
-- A recorded follow-up time does not necessarily mean that an event occurred; censored observations must be handled appropriately in survival analysis.
-- Observed associations or differences do not establish causation or constitute medical advice.
+- Klein, J. P. and Moeschberger, M. L. (2003). *Survival Analysis: Techniques for Censored
+  and Truncated Data*, 2nd ed. Springer. (Source of the `bmt` data.)
+- Kaplan, E. L. and Meier, P. (1958). Nonparametric estimation from incomplete observations.
+  *Journal of the American Statistical Association*, 53, 457-481.
+- Cox, D. R. (1972). Regression models and life-tables. *Journal of the Royal Statistical
+  Society, Series B*, 34, 187-220.
+- Gray, R. J. (1988). A class of K-sample tests for comparing the cumulative incidence of a
+  competing risk. *Annals of Statistics*, 16, 1141-1154.
+- Fine, J. P. and Gray, R. J. (1999). A proportional hazards model for the subdistribution
+  of a competing risk. *Journal of the American Statistical Association*, 94, 496-509.
+- Putter, H., Fiocco, M. and Geskus, R. B. (2007). Tutorial in biostatistics: competing risks
+  and multi-state models. *Statistics in Medicine*, 26, 2389-2430.
+- R packages: survival, cmprsk, survminer, KMsurv, dplyr, tidyr, ggplot2, shiny.
