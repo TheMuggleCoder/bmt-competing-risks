@@ -31,7 +31,6 @@ A plain-language explanation of every method is in **`GUIDE.html`** (open it in 
 | `08_simulation.R` | Simulation study: Aalen-Johansen vs 1 - Kaplan-Meier |
 | `run_all.R` | Runs scripts 01 to 08 in order |
 | `app.R` | Interactive Shiny app (6 tabs) |
-| `GUIDE.html` | Explanation of all concepts and how to read the results |
 
 Each script can also be run on its own; it loads the data automatically if needed.
 
