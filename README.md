@@ -6,8 +6,8 @@ relapse can no longer be observed. This project studies relapse in 137 patients 
 leukaemia (the `bmt` dataset from the R package KMsurv) and shows why ignoring competing deaths
 gives a wrong, inflated picture of relapse risk.
 
-**Live dashboard:** https://YOUR-NAME.shinyapps.io/YOUR-APP/
-**Docker image:** `YOUR-DOCKERHUB-NAME/bmt-dashboard:1.0`
+**Live dashboard:** 
+**Docker image:** 
 **Team:** Abishek Eswaramoorthy, Sumit Singh
 
 ---
