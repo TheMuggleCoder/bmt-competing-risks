@@ -6,8 +6,8 @@ relapse can no longer be observed. This project studies relapse in 137 patients 
 leukaemia (the `bmt` dataset from the R package KMsurv) and shows why ignoring competing deaths
 gives a wrong, inflated picture of relapse risk.
 
-**Live dashboard:** 
-**Docker image:** 
+**Live dashboard:** https://YOUR-NAME.shinyapps.io/YOUR-APP/
+**Docker image:** `abishek933/bmt-dashboard:1.0`
 **Team:** Abishek Eswaramoorthy, Sumit Singh
 
 ---
@@ -70,14 +70,14 @@ until it shows **Running**.
 
 **Run the ready-made image from Docker Hub:**
 ```
-docker run -p 3838:3838 YOUR-DOCKERHUB-NAME/bmt-dashboard:1.0
+docker run -p 3838:3838 abishek933/bmt-dashboard:1.0
 ```
 Then open http://localhost:3838 in your browser. Press `Ctrl + C` in the terminal to stop.
 
 **Or build the image yourself from this repository:**
 ```
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO
+git clone https://github.com/TheMuggleCoder/bmt-competing-risks.git
+cd bmt-competing-risks
 docker build -t bmt-dashboard .
 docker run -p 3838:3838 bmt-dashboard
 ```
